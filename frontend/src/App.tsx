@@ -1,26 +1,27 @@
-import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
+import {useEffect, useState} from 'react';
 import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
+import { EventsOn } from "../wailsjs/runtime/runtime";
+
+function withEvent(eventName: string) {
+  const [event, setEvent] = useState<String|null>(null);
+  useEffect(() => {
+    EventsOn(eventName, (data) => {
+      console.log("Server started", data)
+      setEvent(JSON.stringify(data))
+    })
+  }, []);
+  return event
+}
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
-
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
-
+    const event = withEvent("ServerStarted");
     return (
         <div id="App">
-            <img src={logo} id="logo" alt="logo"/>
-            <div id="result" className="result">{resultText}</div>
-            <div id="input" className="input-box">
-                <input id="name" className="input" onChange={updateName} autoComplete="off" name="input" type="text"/>
-                <button className="btn" onClick={greet}>Greet</button>
-            </div>
+            <h1>View Events</h1>
+            <pre style={{
+              color: "white",
+              border: "1px solid red"
+            }}>{event}</pre>
         </div>
     )
 }

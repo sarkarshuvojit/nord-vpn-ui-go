@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"log/slog"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -85,6 +87,19 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	cancelHttpServer := a.startHttpServer(ctx)
 	a.cancelHttpServer = cancelHttpServer
+
+	go func() {
+		eventId := 0
+		for {
+			slog.Info("Firing server started event")
+			runtime.EventsEmit(ctx, "ServerStarted", map[string]string{
+				"addr":    ":8888",
+				"eventId": string(eventId),
+			})
+			eventId++
+			time.Sleep(10_000 * time.Millisecond)
+		}
+	}()
 }
 
 // Greet returns a greeting for the given name
