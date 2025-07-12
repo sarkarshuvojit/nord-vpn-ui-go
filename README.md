@@ -1,19 +1,67 @@
-# README
+# NordVPN UI Go
 
-## About
+A modern desktop application for NordVPN built with Wails (Go + React + TypeScript).
 
-This is the official Wails React-TS template.
+![App Preview](docs/app_preview.png)
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+## Features
 
-## Live Development
+- 🔐 Secure authentication with NordVPN
+- 🌍 VPN dashboard with connection management
+- 🎨 Modern UI built with React and TypeScript
+- ⚡ Fast native performance with Go backend
+- 🖥️ Cross-platform desktop application
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+## Prerequisites
+
+- Go 1.18+
+- Node.js 16+
+- NordVPN CLI installed on your system
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/nord-vpn-ui-go.git
+cd nord-vpn-ui-go
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+## Development
+
+To run in live development mode:
+
+```bash
+wails dev
+```
+
+This will run a Vite development server with hot reload. You can also access the dev server at http://localhost:34115 to call Go methods from browser devtools.
 
 ## Building
 
-To build a redistributable, production mode package, use `wails build`.
+To build a redistributable, production mode package:
+
+```bash
+wails build
+```
+
+## Project Structure
+
+- `app.go` - Main Go application logic
+- `main.go` - Application entry point
+- `frontend/` - React TypeScript frontend
+  - `src/components/` - React components
+  - `src/store/` - State management
+- `docs/` - Documentation and screenshots
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Configuration
+
+You can configure the project by editing `wails.json`. More information about project settings can be found in the [Wails documentation](https://wails.io/docs/reference/project-config).
