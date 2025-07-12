@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os/exec"
 	"time"
 
 	"log/slog"
@@ -105,4 +106,10 @@ func (a *App) startup(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// IsNordVPNCLIAvailable checks if the NordVPN CLI tool is available in the system PATH
+func (a *App) IsNordVPNCLIAvailable() bool {
+	_, err := exec.LookPath("nordvpn")
+	return err == nil
 }

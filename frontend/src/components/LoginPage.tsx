@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { EyeIcon, EyeSlashIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, EyeSlashIcon, ShieldCheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { IsNordVPNCLIAvailable } from '../../wailsjs/go/main/App';
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => void;
@@ -11,6 +12,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNordVPNAvailable, setIsNordVPNAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkNordVPNAvailability = async () => {
+      try {
+        const available = await IsNordVPNCLIAvailable();
+        setIsNordVPNAvailable(available);
+      } catch (error) {
+        console.error('Error checking NordVPN CLI availability:', error);
+        setIsNordVPNAvailable(false);
+      }
+    };
+
+    checkNordVPNAvailability();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,6 +164,48 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             </p>
           </div>
         </motion.div>
+
+        {/* NordVPN CLI Status */}
+        {isNordVPNAvailable !== null && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className={`mt-4 p-4 rounded-xl border backdrop-blur-lg ${
+              isNordVPNAvailable
+                ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                : 'bg-orange-500/10 border-orange-500/20 text-orange-400'
+            }`}
+          >
+            <div className="flex items-center">
+              {isNordVPNAvailable ? (
+                <ShieldCheckIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+              ) : (
+                <ExclamationTriangleIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+              )}
+              <div className="flex-1">
+                {isNordVPNAvailable ? (
+                  <p className="text-sm font-medium">NordVPN CLI is ready</p>
+                ) : (
+                  <div>
+                    <p className="text-sm font-medium mb-1">NordVPN CLI not found</p>
+                    <p className="text-xs text-orange-300">
+                      Please install NordVPN CLI to use this application.{' '}
+                      <a 
+                        href="https://nordvpn.com/download/linux/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-orange-200 transition-colors"
+                      >
+                        Download here
+                      </a>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Footer */}
         <motion.div
