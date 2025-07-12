@@ -1,29 +1,33 @@
-import {useEffect, useState} from 'react';
+import { useState } from 'react';
 import './App.css';
-import { EventsOn } from "../wailsjs/runtime/runtime";
+import { LoginPage } from './components/LoginPage';
+import { VPNDashboard } from './components/VPNDashboard';
 
-function withEvent(eventName: string) {
-  const [event, setEvent] = useState<String|null>(null);
-  useEffect(() => {
-    EventsOn(eventName, (data) => {
-      console.log("Server started", data)
-      setEvent(JSON.stringify(data))
-    })
-  }, []);
-  return event
+interface User {
+  email: string;
 }
 
 function App() {
-    const event = withEvent("ServerStarted");
-    return (
-        <div id="App">
-            <h1>View Events</h1>
-            <pre style={{
-              color: "white",
-              border: "1px solid red"
-            }}>{event}</pre>
-        </div>
-    )
+  const [user, setUser] = useState<User | null>(null);
+
+  const handleLogin = (email: string, password: string) => {
+    // Simulate authentication - in real app, this would call an API
+    setUser({ email });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  return (
+    <div id="App">
+      {user ? (
+        <VPNDashboard user={user} onLogout={handleLogout} />
+      ) : (
+        <LoginPage onLogin={handleLogin} />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
